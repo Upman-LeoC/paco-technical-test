@@ -24,7 +24,7 @@ public class FlightFacade {
     private final AirportMapper airportMapper;
 
     public Flux<FlightRepresentation> getAllFlights(String sortBy, int page) {
-        return flightService.getAllFlights(page)
+        return flightService.getAllFlights(page, sortBy)
                 .flatMap(flightRecord -> airportService.findByIataCode(flightRecord.getOrigin())
                         .zipWith(airportService.findByIataCode(flightRecord.getDestination()))
                         .flatMap(tuple -> {
@@ -34,19 +34,19 @@ public class FlightFacade {
                             flightRepresentation.setOrigin(this.airportMapper.convert(origin));
                             flightRepresentation.setDestination(this.airportMapper.convert(destination));
                             return Mono.just(flightRepresentation);
-                        }))
-                .sort((flight1, flight2) -> {
-                    if (sortBy != null) {
-                        if ("price".equals(sortBy)) {
-                            return Double.compare(flight1.getPrice(), flight2.getPrice());
-                        } else if ("origin".equals(sortBy)) {
-                            return flight1.getOrigin().getName().compareTo(flight2.getOrigin().getName());
-                        } else if ("destination".equals(sortBy)) {
-                            return flight1.getDestination().getName().compareTo(flight2.getDestination().getName());
-                        }
-                    }
-                    return 0;
-                });
+                        }));
+//                .sort((flight1, flight2) -> {
+//                    if (sortBy != null) {
+//                        if ("price".equals(sortBy)) {
+//                            return Double.compare(flight1.getPrice(), flight2.getPrice());
+//                        } else if ("origin".equals(sortBy)) {
+//                            return flight1.getOrigin().getName().compareTo(flight2.getOrigin().getName());
+//                        } else if ("destination".equals(sortBy)) {
+//                            return flight1.getDestination().getName().compareTo(flight2.getDestination().getName());
+//                        }
+//                    }
+//                    return 0;
+//                });
     }
 
     public void addFlight(FlightRecord flight) {

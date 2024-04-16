@@ -78,6 +78,29 @@
     <h2>Bienvenue sur notre site de recherche de vols</h2>
     <p>Commencez votre aventure en trouvant les meilleurs vols disponibles.</p>
     <!-- Ajoutez ici le formulaire de recherche de vols ou d'autres éléments pertinents -->
+    <a href="new">
+        + Ajouter un vol
+    </a>&nbsp;
+    <a th:href="@{/(page=${page}, sortBy=price)}">
+        Trier par prix
+    </a>&nbsp;
+    <a th:href="@{/(page=${page}, sortBy=origin)}">
+        Trier par origine
+    </a>&nbsp;
+    <a th:href="@{/(page=${page}, sortBy=arrival)}">
+        Trier par arrivé
+    </a>&nbsp;
+    <a th:href="@{/(page=${page})}">
+        Supprimer les filtres
+    </a>
+    <br>
+    <a th:if="${page} > 0" th:href="@{/(page=${page}-1, sortBy=${sortBy})}">
+        <
+    </a>
+    <span th:text="${page}"></span>
+    <a th:if="${flights.size} == 6" th:href="@{/(page=${page}+1, sortBy=${sortBy})}">
+        >
+    </a>
     <ul>
         <table>
             <tr>
@@ -90,7 +113,9 @@
                 <th th:text="${flight.origin.name}"></th>
                 <th th:text="${flight.destination.name}"></th>
                 <th th:text="${flight.price}"></th>
-                <th th:text="${flight.photo}"></th>
+                <th>
+                    <img th:src="${flight.image}" alt="" width="100px">
+                </th>
             </tr>
         </table>
     </ul>
